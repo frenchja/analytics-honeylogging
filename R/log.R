@@ -7,6 +7,8 @@ with_logging <- function(expr) {
   tryCatch(eval(expr), error = parse_error)
 }
 
+HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
+
 parse_error <- function(error) {
   trace <- bettertrace::stacktrace()
 
@@ -15,20 +17,15 @@ parse_error <- function(error) {
   tags <- list("foo", "bar")
   backtrace <- rjson::toJSON(trace)
 
-  honeybadger_payload =  sprintf('{
-"notifier":{
-  "name":"honeylogging Notifier",
-    "url":"TBD",
-    "version":"1.0.0"
-},
-"error": {
-  "class": %s,
-  "message": %s,
-  "tags": %s,
-  },
- "backtrace": %s}', class, message, tags, backtrace)
+  honeybadger_payload = list(
+    notifier = list(
+      name = "honeylogging Notifier",
+      url = "TBD"
+    ),
+    error = list(
+      class = "foo"
+    )
+  )
 
-  # list(backtrace = error)
-  # parsed_honey_badger_payload <- rjson::toJSON(honey_badger_payload)
-  print(honeybadger_payload)
+  print(toJSON(honeybadger_payload))
 }
