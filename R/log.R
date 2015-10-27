@@ -3,9 +3,6 @@ library(httr)
 library(rjson)
 
 
-API_KEY = 
-
-
 with_logging <- function(expr) {
   tryCatch(eval(expr), error = parse_error)
 }
@@ -18,6 +15,7 @@ parse_error <- function(error) {
   class <- "foo"
   message <- "someError"
   tags <- list("foo", "bar")
+  # browser()
   backtrace <- rjson::toJSON(trace)
 
   honeybadger_payload = list(
@@ -26,8 +24,20 @@ parse_error <- function(error) {
       url = "TBD"
     ),
     error = list(
-      class = "foo"
-    )
+      class = "foo",
+      backtrace = list(
+        # list(number=55, file="foo.R", method="runtime_error")
+      )
+    ),
+    request = list(
+      context = list(),
+      params = list(),
+      session = list(),
+      cgi_data = list(),
+      user = list(),
+      user = list()
+    ),
+    server = list()
   )
 
   print(toJSON(honeybadger_payload))
@@ -40,14 +50,14 @@ post_to_honeybadger <- function(payload) {
   config <- httr::add_headers(
     Accept = "application/json",
     "Content-Type" = "application/json",
-    "X-API-Key" = "zFBGzLTP8nPkyWrHxQzV"
+    "X-API-Key" = "68b92209" # "zFBGzLTP8nPkyWrHxQzV"
   )
   resp = httr::POST(
-    HONEYBADGER_URL,
+    "http://requestb.in/1nf4l4r1",
+    # HONEYBADGER_URL,
     body=toJSON(payload),
     config
   )
-  browser()
 
-  print('boo yea!!')
+  print(resp)
 }
