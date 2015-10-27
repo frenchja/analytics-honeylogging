@@ -2,7 +2,6 @@ library(httr)
 library(logging)
 
 
-# API_KEY = "zFBGzLTP8nPkyWrHxQzV"
 
 tryCatch({
   foo <- function() { bar() + 1 }
