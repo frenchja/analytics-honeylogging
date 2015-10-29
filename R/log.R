@@ -1,4 +1,5 @@
 library(bettertrace)
+library(crayon)
 library(httr)
 library(rjson)
 
@@ -7,10 +8,12 @@ with_logging <- function(expr) {
   tryCatch(eval(expr), error = parse_error)
 }
 
+
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
 parse_error <- function(error) {
-  trace <- bettertrace::stacktrace()
+  # trace <- bettertrace::stacktrace()
+  trace <- stacktrace()
 
   class <- "foo"
   message <- "someError"
@@ -24,25 +27,29 @@ parse_error <- function(error) {
       url = "TBD"
     ),
     error = list(
-      class = "foo",
+      class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
+      tags = tags,
       backtrace = list(
         # list(number=55, file="foo.R", method="runtime_error")
       )
     ),
     request = list(
-      context = list(),
-      params = list(),
-      session = list(),
-      cgi_data = list(),
-      user = list(),
-      user = list()
+      context = list(foo=list()),
+      params = list(foo=list()),
+      session = list(foo=list()),
+      cgi_data = list(foo=list()),
+      user = list(foo=list()),
+      user = list(foo=list())
     ),
-    server = list()
+    server = list(foo=list())
   )
 
   print(toJSON(honeybadger_payload))
 
+  # Alternatively: Use system.time()
+  ptm <- proc.time()
   post_to_honeybadger(honeybadger_payload)
+  print(proc.time() - ptm)
 }
 
 
@@ -53,11 +60,13 @@ post_to_honeybadger <- function(payload) {
     "X-API-Key" = "68b92209" # "zFBGzLTP8nPkyWrHxQzV"
   )
   resp = httr::POST(
-    "http://requestb.in/1nf4l4r1",
-    # HONEYBADGER_URL,
+    # "http://requestb.in/1nf4l4r1",
+    HONEYBADGER_URL,
     body=toJSON(payload),
     config
   )
 
   print(resp)
 }
+
+with_logging(1+x)
