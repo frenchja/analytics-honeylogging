@@ -1,4 +1,4 @@
-library(bettertrace)
+# library(bettertrace)
 library(crayon)
 library(httr)
 library(rjson)
@@ -14,6 +14,7 @@ HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 parse_error <- function(error) {
   # trace <- bettertrace::stacktrace()
   trace <- stacktrace()
+  # trace <- simple_trace()
 
   class <- "foo"
   message <- "someError"
@@ -69,4 +70,4 @@ post_to_honeybadger <- function(payload) {
   print(resp)
 }
 
-with_logging(1+x)
+# with_logging(1+x)

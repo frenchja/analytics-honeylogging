@@ -1,3 +1,5 @@
+
+
 stacktrace <- function() {
   n     <- length(sys.calls())
   trace <- Map(call_description, sys.calls(), sys.frames())
@@ -43,8 +45,10 @@ file_description <- function(call, frame, ref) {
 
 ref_text <- function(frame, ref) {
   file <- ref_filename(ref)
-  browser()
+
+  # If file
   if (nzchar(file)) {
+    browser()
     file <- normalizePath(file)
     paste0(decorate_file(file), ":", crayon::bold(as.character(ref[1L])),
            ": ", trim_call(as.character(ref)))
