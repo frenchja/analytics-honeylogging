@@ -48,7 +48,6 @@ ref_text <- function(frame, ref) {
 
   # If file
   if (nzchar(file)) {
-    browser()
     file <- normalizePath(file)
     paste0(decorate_file(file), ":", crayon::bold(as.character(ref[1L])),
            ": ", trim_call(as.character(ref)))

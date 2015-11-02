@@ -5,20 +5,19 @@ library(rjson)
 
 
 with_logging <- function(expr, message = "NA", tags = list()) {
-  tryCatch(eval(expr), error = function (...) parse_error(..., message, tags))
+  tryCatch(eval(expr), error = function (error) parse_error(error, message, tags))
 }
 
 
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
-parse_error <- function(error) {
+parse_error <- function(error, message, tags) {
   trace <- stacktrace()
   # trace <- simple_trace()
 
   class <- "foo" # TODO
   message <- message  # Alternatively: bettertrace::stacktrace()
   tags <- tags
-  # browser()
   backtrace <- rjson::toJSON(trace)
 
   honeybadger_payload = list(
@@ -44,8 +43,14 @@ parse_error <- function(error) {
       user = list(foo=list())
     ),
     server = list(
-      hostname=Sys.info()["sysname"],
-
+      hostname = Sys.info()["sysname"],
+      nodename = Sys.info()["nodename"],
+      release = Sys.info()["release"],
+      version = Sys.info()["versions"],
+      machine = Sys.info()["machine"],
+      login = Sys.info()["login"],
+      user = Sys.info()["user"],
+      effective_user = Sys.info()["effective_user"]
     )
   )
 

@@ -1,6 +1,4 @@
 simple_trace <- function() {
-
-  browser()
   n     <- length(sys.calls())
   trace <- Map(get_file_names, sys.calls(), sys.frames())
   trace <- strip_hidden(trace)
