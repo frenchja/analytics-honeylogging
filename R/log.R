@@ -12,10 +12,14 @@ with_logging <- function(expr, message = "NA", tags = list()) {
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
 parse_error <- function(error, message, tags) {
+  e$trace <- stacktrace()
+  e$trace <- e$trace[seq_len(length(e$trace) - 2)]
+  signalCondition(e)
+
   trace <- crayon::strip_style(stacktrace())
   # trace <- simple_trace()
 
-  class <- "foo" # TODO
+  class <- "foo_class" # TODO
   message <- trace  # message  # Alternatively: bettertrace::stacktrace()
   tags <- tags
   backtrace <- rjson::toJSON(trace)
@@ -27,12 +31,14 @@ parse_error <- function(error, message, tags) {
     ),
     error = list(
       # Generate a random class
+      # TODO: What qualifies as a class for R?
       class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
       tags = tags,
       message = message,
       backtrace = list(
         # TODO
-        # list(number=55, file="foo.R", method="runtime_error")
+        # list(method_name, file, number)
+
       )
     ),
     request = list(
