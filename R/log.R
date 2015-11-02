@@ -12,11 +12,11 @@ with_logging <- function(expr, message = "NA", tags = list()) {
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
 parse_error <- function(error, message, tags) {
-  trace <- stacktrace()
+  trace <- crayon::strip_style(stacktrace())
   # trace <- simple_trace()
 
   class <- "foo" # TODO
-  message <- message  # Alternatively: bettertrace::stacktrace()
+  message <- trace  # message  # Alternatively: bettertrace::stacktrace()
   tags <- tags
   backtrace <- rjson::toJSON(trace)
 
