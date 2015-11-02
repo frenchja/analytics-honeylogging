@@ -4,45 +4,49 @@ library(httr)
 library(rjson)
 
 
-with_logging <- function(expr) {
-  tryCatch(eval(expr), error = parse_error)
+with_logging <- function(expr, message = "NA", tags = list()) {
+  tryCatch(eval(expr), error = function (...) parse_error(..., message, tags))
 }
 
 
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
 parse_error <- function(error) {
-  # trace <- bettertrace::stacktrace()
   trace <- stacktrace()
   # trace <- simple_trace()
 
-  class <- "foo"
-  message <- "someError"
-  tags <- list("foo", "bar")
+  class <- "foo" # TODO
+  message <- message  # Alternatively: bettertrace::stacktrace()
+  tags <- tags
   # browser()
   backtrace <- rjson::toJSON(trace)
 
   honeybadger_payload = list(
     notifier = list(
       name = "honeylogging Notifier",
-      url = "TBD"
+      url = "TBD"  # TODO
     ),
     error = list(
+      # Generate a random class
       class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
       tags = tags,
+      message = message,
       backtrace = list(
+        # TODO
         # list(number=55, file="foo.R", method="runtime_error")
       )
     ),
     request = list(
+      cgi_data = list(foo=list()),
       context = list(foo=list()),
       params = list(foo=list()),
       session = list(foo=list()),
-      cgi_data = list(foo=list()),
-      user = list(foo=list()),
       user = list(foo=list())
     ),
-    server = list(foo=list())
+    server = list(
+      hostname=Sys.info()["sysname"],
+
+    )
   )
 
   print(toJSON(honeybadger_payload))
