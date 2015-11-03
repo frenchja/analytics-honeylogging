@@ -5,24 +5,38 @@ library(rjson)
 
 
 with_logging <- function(expr, message = "NA", tags = list()) {
-  tryCatch(eval(expr), error = function (error) parse_error(error, message, tags))
+  withCallingHandlers(
+    eval(expr),
+    error = function (error) log_error(error, message, tags)
+  )
 }
 
 
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
-parse_error <- function(error, message, tags) {
-  e$trace <- stacktrace()
-  e$trace <- e$trace[seq_len(length(e$trace) - 2)]
-  signalCondition(e)
+parse_error <- function(error) {
+  trace <- stacktrace()
+  # trace <- e$trace[seq_len(length(e$trace) - 2)]
+  signalCondition(error)
 
-  trace <- crayon::strip_style(stacktrace())
-  # trace <- simple_trace()
+  trace_output <- lapply(trace, function(element) {
+    method <- if (is.call(element$method)) element$method[[1L]] else element$method
+    element$method <- paste(collapse = " ", deparse(width.cutoff = 500L, call))
+    element
+  })
+  trace_output
+}
+
+log_error <- function(error, message, tags) {
+
+  # browser()
+  backtrace <- parse_error(error)
 
   class <- "foo_class" # TODO
-  message <- trace  # message  # Alternatively: bettertrace::stacktrace()
   tags <- tags
-  backtrace <- rjson::toJSON(trace)
+
+  browser()
+  backtrace <- rjson::toJSON(backtrace)
 
   honeybadger_payload = list(
     notifier = list(
@@ -35,11 +49,7 @@ parse_error <- function(error, message, tags) {
       class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
       tags = tags,
       message = message,
-      backtrace = list(
-        # TODO
-        # list(method_name, file, number)
-
-      )
+      backtrace = backtrace
     ),
     request = list(
       cgi_data = list(foo=list()),

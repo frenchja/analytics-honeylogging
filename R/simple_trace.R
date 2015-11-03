@@ -35,7 +35,7 @@ call_metadata <- function(call, frame) {
   if (is.null(srcref)) {
     frame_info <- frame_text(frame)
     list(file = attr(frame_info, "pkg") %||%
-         "unknown_environment", number = 0, call = call)
+         "unknown_environment", number = 0, method = call)
   } else {
     file <- ref_filename(srcref)
     if (nzchar(file)) {
@@ -43,24 +43,20 @@ call_metadata <- function(call, frame) {
     } else {
       file <- "unknown_file"
     }
-    list(file = file, number = as.integer(srcref[[1]]), call = call)
+    list(file = file, number = as.integer(srcref[[1]]), method = call)
   }
 }
 
-final_output <- tryCatch(error = identity,
-  withCallingHandlers(
-    source("~/tmp/blahblah.R"),
-    error = function(e) {
-      e$trace <- stacktrace()
-      e$trace <- e$trace[seq_len(length(e$trace) - 2)]
-      signalCondition(e)
-    })
-)
-
-if (is(final_output, "error")) {
-  trace_output <- lapply(final_output$trace, function(element) {
-    call <- if (is.call(element$call)) element$call[[1L]] else element$call
-    element$call <- paste(collapse = " ", deparse(width.cutoff = 500L, call))
-    element
-  })
-}
+# final_output <- tryCatch(error = identity,
+#   withCallingHandlers(
+#     source("~/tmp/blahblah.R"),
+#     error = function(e) {
+#       e$trace <- stacktrace()
+#       e$trace <- e$trace[seq_len(length(e$trace) - 2)]
+#       signalCondition(e)
+#     })
+# )
+#
+# if (is(final_output, "error")) {
+#   
+# }
