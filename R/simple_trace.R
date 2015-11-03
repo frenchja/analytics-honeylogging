@@ -35,7 +35,7 @@ call_metadata <- function(call, frame) {
   if (is.null(srcref)) {
     frame_info <- frame_text(frame)
     list(file = attr(frame_info, "pkg") %||%
-         "unknown_environment", number = 0, method = call)
+         "unknown_environment", number = "0", method = call)
   } else {
     file <- ref_filename(srcref)
     if (nzchar(file)) {
@@ -43,7 +43,7 @@ call_metadata <- function(call, frame) {
     } else {
       file <- "unknown_file"
     }
-    list(file = file, number = as.integer(srcref[[1]]), method = call)
+    list(file = file, number = as.character(srcref[[1]]), method = call)
   }
 }
 
