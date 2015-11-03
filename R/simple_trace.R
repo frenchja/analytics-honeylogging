@@ -46,17 +46,3 @@ call_metadata <- function(call, frame) {
     list(file = file, number = as.character(srcref[[1]]), method = call)
   }
 }
-
-# final_output <- tryCatch(error = identity,
-#   withCallingHandlers(
-#     source("~/tmp/blahblah.R"),
-#     error = function(e) {
-#       e$trace <- stacktrace()
-#       e$trace <- e$trace[seq_len(length(e$trace) - 2)]
-#       signalCondition(e)
-#     })
-# )
-#
-# if (is(final_output, "error")) {
-#   
-# }

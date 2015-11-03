@@ -16,7 +16,6 @@ HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
 parse_error <- function(error) {
   trace <- stacktrace()
-  # trace <- e$trace[seq_len(length(e$trace) - 2)]
   signalCondition(error)
 
   trace_output <- lapply(trace, function(element) {
@@ -29,14 +28,12 @@ parse_error <- function(error) {
 
 log_error <- function(error, message, tags) {
 
-  # browser()
-  backtrace <- parse_error(error)
-
-  class <- "foo_class" # TODO
-  tags <- tags
-
-  browser()
-  backtrace <- rjson::toJSON(backtrace)
+  # Get stacktrace if we have an error
+  if (is.null(error)) {
+    backtrace <- list()
+  } else {
+    backtrace <- parse_error(error)
+  }
 
   honeybadger_payload = list(
     notifier = list(
@@ -44,8 +41,8 @@ log_error <- function(error, message, tags) {
       url = "TBD"  # TODO
     ),
     error = list(
-      # Generate a random class
       # TODO: What qualifies as a class for R?
+      # Generate a random class
       class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
       tags = tags,
       message = message,
@@ -94,5 +91,3 @@ post_to_honeybadger <- function(payload) {
 
   print(resp)
 }
-
-# with_logging(1+x)
