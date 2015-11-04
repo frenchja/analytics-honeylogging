@@ -46,3 +46,8 @@ call_metadata <- function(call, frame) {
     list(file = file, number = as.character(srcref[[1]]), method = call)
   }
 }
+
+
+# For mockability in tests
+is.namespace <- function(env) isNamespace(env)
+ref_filename <- function(ref) attr(ref, "srcfile")$filename

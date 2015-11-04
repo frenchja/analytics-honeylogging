@@ -68,11 +68,6 @@ log_error <- function(error, message, tags) {
   )
 
   print(toJSON(honeybadger_payload))
-
-  # Alternatively: Use system.time()
-  ptm <- proc.time()
-  post_to_honeybadger(honeybadger_payload)
-  print(proc.time() - ptm)
 }
 
 
@@ -80,10 +75,9 @@ post_to_honeybadger <- function(payload) {
   config <- httr::add_headers(
     Accept = "application/json",
     "Content-Type" = "application/json",
-    "X-API-Key" = "68b92209" # "zFBGzLTP8nPkyWrHxQzV"
+    "X-API-Key" = "68b92209"
   )
   resp = httr::POST(
-    # "http://requestb.in/1nf4l4r1",
     HONEYBADGER_URL,
     body=toJSON(payload),
     config
