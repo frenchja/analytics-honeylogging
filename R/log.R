@@ -65,7 +65,7 @@ log_error <- function(error, message, tags) {
     )
   )
 
-  print(toJSON(honeybadger_payload))
+  print(rjson::toJSON(honeybadger_payload))
 
   post_to_honeybadger(honeybadger_payload)
 }
@@ -79,7 +79,7 @@ post_to_honeybadger <- function(payload) {
   )
   resp = httr::POST(
     HONEYBADGER_URL,
-    body=toJSON(payload),
+    body=rjson::toJSON(payload),
     config
   )
 
