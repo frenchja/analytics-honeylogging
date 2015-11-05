@@ -75,7 +75,7 @@ post_to_honeybadger <- function(payload) {
   config <- httr::add_headers(
     Accept = "application/json",
     "Content-Type" = "application/json",
-    "X-API-Key" = "68b92209"
+    "X-API-Key" = get_honeybadger_env_var()
   )
   resp = httr::POST(
     HONEYBADGER_URL,
