@@ -13,6 +13,7 @@ with_logging <- function(expr, message = "NA", tags = list()) {
 
 HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
 
+
 parse_error <- function(error) {
   trace <- stacktrace()
   signalCondition(error)
