@@ -26,7 +26,7 @@ parse_error <- function(error) {
   trace_output
 }
 
-log_error <- function(error, message, tags) {
+log_error <- function(error, message = "NA", tags = list()) {
   # Get stacktrace if we have an error
   if (is.null(error)) {
     backtrace <- list()
