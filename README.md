@@ -7,7 +7,7 @@ This package is not yet available from CRAN. To install the latest development b
 
 ```R
 if (!require('devtools')) install.packages('devtools')
-devtools::install_github('avantcredit', 'analytics-honeylogging')
+devtools::install_github('avantcredit/analytics-honeylogging')
 ```
 
 To ensure logging calls get sent to Honeybadger you need to set the `HONEYBADGER_API_KEY` environment variable.
