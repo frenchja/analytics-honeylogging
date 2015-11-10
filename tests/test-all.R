@@ -1,5 +1,5 @@
 library(testthat)
 library(testthatsomemore)
-library(avant)
+library("honeylogging")
 
 test_check("honeylogging")
