@@ -24,7 +24,6 @@ parse_error <- function(error) {
     element
   })
   trace_output
-  # trace
 }
 
 log_error <- function(error, message = "NA", tags = list()) {
@@ -85,7 +84,5 @@ post_to_honeybadger <- function(payload) {
     encode = "json",
     config
   )
-  # browser()
-
   TRUE
 }
