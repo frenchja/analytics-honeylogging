@@ -1,18 +1,16 @@
-library(crayon)
-library(httr)
-library(rjson)
-
-
+#' Wrap an expression with this function, and on error it will POST
+#' error stacktrace to honeybadger
+#'
+#' @param expr expression. Expression to be evaluated.
+#' @param message character. Message to be displayed on henoeybadger for this error.
+#' @param tags list. Additional tags for sorting on honeybadger UI.
+#' @export
 with_logging <- function(expr, message = "NA", tags = list()) {
   withCallingHandlers(
     eval(expr),
     error = function (error) log_error(error, message, tags)
   )
 }
-
-
-HONEYBADGER_URL <- "https://api.honeybadger.io/v1/notices"
-
 
 parse_error <- function(error) {
   trace <- stacktrace()
@@ -66,23 +64,22 @@ log_error <- function(error, message, tags) {
     )
   )
 
-  print(rjson::toJSON(honeybadger_payload))
-
   post_to_honeybadger(honeybadger_payload)
 }
 
 
 post_to_honeybadger <- function(payload) {
   config <- httr::add_headers(
-    Accept = "application/json",
+    Accept         = "application/json",
     "Content-Type" = "application/json",
-    "X-API-Key" = get_honeybadger_env_var()
+    "X-API-Key"    = get_honeybadger_env_var()
   )
   resp = httr::POST(
     HONEYBADGER_URL,
-    body=rjson::toJSON(payload),
+    body   = payload,
+    encode = "json",
     config
   )
 
-  print(resp)
+  TRUE
 }
