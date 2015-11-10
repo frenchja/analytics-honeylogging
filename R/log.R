@@ -8,12 +8,13 @@
 with_logging <- function(expr, message = "NA", tags = list()) {
   withCallingHandlers(
     eval(expr),
-    error = function (error) log_error(error, message, tags)
+    error = function (error) { log_error(error, message, tags) }
   )
 }
 
 parse_error <- function(error) {
-  trace <- stacktrace()
+  trace <- stacktrace() #  bettertrace::stacktrace()
+  # trace <- lapply(trace, function(x) { x[1] <- crayon::strip_style(x[1]); x })
   signalCondition(error)
 
   trace_output <- lapply(trace, function(element) {
@@ -34,32 +35,30 @@ log_error <- function(error, message, tags) {
 
   honeybadger_payload = list(
     notifier = list(
-      name = "honeylogging Notifier",
-      url = "TBD"  # TODO
+      name = "honeylogging notifier",
+      url  = "TBD"
     ),
     error = list(
-      # TODO: What qualifies as a class for R?
-      # Generate a random class
-      class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
-      tags = tags,
-      message = message,
+      class     = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
+      tags      = tags,
+      message   = message,
       backtrace = backtrace
     ),
     request = list(
-      cgi_data = list(foo=list()),
-      context = list(foo=list()),
-      params = list(foo=list()),
-      session = list(foo=list()),
-      user = list(foo=list())
+      cgi_data = list(foo = list()),
+      context  = list(foo = list()),
+      params   = list(foo = list()),
+      session  = list(foo = list()),
+      user     = list(foo = list())
     ),
     server = list(
       hostname = Sys.info()["sysname"],
       nodename = Sys.info()["nodename"],
-      release = Sys.info()["release"],
-      version = Sys.info()["versions"],
-      machine = Sys.info()["machine"],
-      login = Sys.info()["login"],
-      user = Sys.info()["user"],
+      release  = Sys.info()["release"],
+      version  = Sys.info()["versions"],
+      machine  = Sys.info()["machine"],
+      login    = Sys.info()["login"],
+      user     = Sys.info()["user"],
       effective_user = Sys.info()["effective_user"]
     )
   )
@@ -74,9 +73,9 @@ post_to_honeybadger <- function(payload) {
     "Content-Type" = "application/json",
     "X-API-Key"    = get_honeybadger_env_var()
   )
-  resp = httr::POST(
+  httr::POST(
     HONEYBADGER_URL,
-    body   = payload,
+    body   = jsonlite::toJSON(payload, auto_unbox = TRUE),
     encode = "json",
     config
   )
