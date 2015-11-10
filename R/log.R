@@ -36,7 +36,7 @@ log_error <- function(error, message = "NA", tags = list()) {
 
   # browser()
 
-  honeybadger_payload = list(
+  honeybadger_payload <- list(
     notifier = list(
       name = "honeylogging Notifier",
       url = "TBD"  # TODO
