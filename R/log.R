@@ -16,8 +16,6 @@ parse_error <- function(error) {
   trace <- stacktrace()
   signalCondition(error)
 
-  # browser()
-
   trace_output <- lapply(trace, function(element) {
     method <- if (is.call(element$method)) element$method[[1L]] else element$method
     element$method <- paste(collapse = " ", deparse(width.cutoff = 500L, method))
@@ -33,8 +31,6 @@ log_error <- function(error, message = "NA", tags = list()) {
   } else {
     backtrace <- parse_error(error)
   }
-
-  # browser()
 
   honeybadger_payload <- list(
     notifier = list(
@@ -78,11 +74,15 @@ post_to_honeybadger <- function(payload) {
     "Content-Type" = "application/json",
     "X-API-Key"    = get_honeybadger_env_var()
   )
-  resp = httr::POST(
+  resp <- httr::POST(
     HONEYBADGER_URL,
     body   = payload,
     encode = "json",
     config
   )
-  TRUE
+  if (resp$status == 201) {
+    TRUE
+  } else {
+    FALSE
+  }
 }
