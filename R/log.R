@@ -17,8 +17,8 @@ parse_error <- function(error) {
   signalCondition(error)
 
   trace_output <- lapply(trace, function(element) {
-    method <- if (is.call(element$method)) element$method[[1L]] else element$method
-    element$method <- paste(collapse = " ", deparse(width.cutoff = 500L, method))
+    # Turn unevaluated expressions into character strings and then concatenate.
+    element$method <- paste(collapse = " ", deparse(width.cutoff = 500L, element$method))
     element
   })
   trace_output
