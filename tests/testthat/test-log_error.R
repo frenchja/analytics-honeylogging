@@ -39,7 +39,6 @@ get_fake_payload <- function() {
 
 test_that("test log_error", {
   with_mock(
-    # `post_to_honeybadger`          = function(...) list(status=201),
     `httr::POST`          = function(...) list(status=201),
     res <- log_error(NULL, message = "an error", tags = list("ERROR")),
     expect_equal(res, TRUE)
