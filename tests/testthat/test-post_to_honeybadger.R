@@ -38,8 +38,7 @@ get_fake_payload <- function() {
 
 test_that("payload is posted to Honeybadger", {
   with_mock(
-    `httr::POST`          = function(...) list(),
-    `httr::http_status`   = function(...) list(message = "success"),
+    `httr::POST`          = function(...) list(status=201),
     res <- post_to_honeybadger(get_fake_payload()),
     expect_equal(res, TRUE)
   )
