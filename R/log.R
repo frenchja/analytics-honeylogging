@@ -34,8 +34,6 @@ log_error <- function(error, class = "NA", message = "NA", tags = list()) {
       url = "TBD"  # NOTE(Ahmed): This is useful in the web context; aka logging in Rails.
     ),
     error = list(
-      # TODO: What qualifies as a class for R?
-      # Generate a random class
       class = class,
       tags = tags,
       message = message,
