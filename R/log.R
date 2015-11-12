@@ -5,10 +5,10 @@
 #' @param message character. Message to be displayed on henoeybadger for this error.
 #' @param tags list. Additional tags for sorting on honeybadger UI.
 #' @export
-with_logging <- function(expr, message = "NA", tags = list()) {
+with_logging <- function(expr, class = "NA", message = "NA", tags = list()) {
   withCallingHandlers(
     eval(expr),
-    error = function (error) log_error(error, message, tags)
+    error = function (error) log_error(error, class, message, tags)
   )
 }
 
@@ -19,7 +19,7 @@ with_logging <- function(expr, message = "NA", tags = list()) {
 #' @param message character. Message to be displayed on henoeybadger for this error.
 #' @param tags list. Additional tags for sorting on honeybadger UI.
 #' @export
-log_error <- function(error, message = "NA", tags = list()) {
+log_error <- function(error, class = "NA", message = "NA", tags = list()) {
   # Get stacktrace if we have an error. If no error is provided, honeybadger's
   # backtrace array is instead an empty list
   if (is.null(error)) {
@@ -36,7 +36,7 @@ log_error <- function(error, message = "NA", tags = list()) {
     error = list(
       # TODO: What qualifies as a class for R?
       # Generate a random class
-      class = paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse=""),
+      class = class,
       tags = tags,
       message = message,
       backtrace = backtrace
